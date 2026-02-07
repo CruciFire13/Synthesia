@@ -5,35 +5,39 @@ import {
   SignInButton,
   SignUpButton,
   UserButton,
+  useUser,
 } from "@clerk/clerk-react";
+import "../../css/auth/Auth.css";
 
 const Auth = () => {
-  return (
-    <div className="flex items-center justify-end gap-6">
-      {/* 1. VIEW WHEN LOGGED OUT */}
-      <SignedOut>
-        {/* Sign Up Button (Text Style) */}
-        <SignUpButton mode="modal">
-          <button className="text-gray-400 hover:text-white font-medium text-sm transition tracking-wide cursor-pointer">
-            Signup
-          </button>
-        </SignUpButton>
+  const { user } = useUser();
 
-        {/* Login Button (White Pill Style) */}
-        <SignInButton mode="modal">
-          <button className="bg-white text-black px-8 py-2 rounded-full text-sm font-bold hover:scale-105 transition shadow-lg shadow-purple-500/10 cursor-pointer">
-            Login
-          </button>
-        </SignInButton>
+  return (
+    <div className="auth-wrapper">
+      {/* 1. VIEW WHEN LOGGED OUT (Show Login/Signup Buttons) */}
+      <SignedOut>
+        <div className="auth-container">
+          {/* Clerk Signup Button Trigger */}
+          <SignUpButton mode="modal">
+            <button className="auth-btn signup">Signup</button>
+          </SignUpButton>
+
+          {/* Clerk Login Button Trigger */}
+          <SignInButton mode="modal">
+            <button className="auth-btn login">Login</button>
+          </SignInButton>
+        </div>
       </SignedOut>
 
-      {/* 2. VIEW WHEN LOGGED IN */}
+      {/* 2. VIEW WHEN LOGGED IN (Show User Profile) */}
       <SignedIn>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 bg-white/10 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md">
+          {/* Greeting */}
           <span className="text-white font-medium text-sm hidden md:block">
-            {/* Optional: Show user's name if you want */}
+            Hi, {user?.firstName || "User"}
           </span>
-          {/* The Circular Profile Menu */}
+
+          {/* Clerk Profile Circle (Handles Logout automatically) */}
           <UserButton afterSignOutUrl="/" />
         </div>
       </SignedIn>
