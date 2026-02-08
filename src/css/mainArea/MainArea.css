@@ -1,8 +1,41 @@
-.mainarea-root {
-  @apply flex flex-col h-full min-h-0;
+/* css/mainArea/MainArea.css */
+
+.main-area-container {
+  /* 1. Layout (Fills the 1fr grid column from App.css) */
+  width: 100%;
+  height: calc(100vh - 90px); /* Full height minus player */
+
+  /* Removed margin-left. The Grid handles placement now! */
+
+  /* 2. Scrolling */
+  overflow-y: auto;
+
+  /* 3. Visuals */
+  background-color: #050509;
+  background-image: radial-gradient(
+    circle at 50% -10%,
+    rgba(120, 58, 237, 0.15),
+    transparent 60%
+  );
+  color: white;
+
+  /* 4. Spacing */
+  padding: 2rem 3rem;
+  padding-bottom: 120px; /* Extra padding so last song is visible */
+  box-sizing: border-box;
 }
 
-/* This is the ONLY scrolling container */
-.mainarea-scroll {
-  @apply flex-1 min-h-0 overflow-hidden;
+/* Custom Scrollbar for the main area */
+.main-area-container::-webkit-scrollbar {
+  width: 8px;
+}
+.main-area-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.main-area-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+.main-area-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }

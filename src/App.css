@@ -12,9 +12,7 @@
   }
 }
 
-
 @layer components {
-  
   .btn-icon {
     @apply bg-transparent border-none cursor-pointer p-2 inline-flex items-center justify-center 
            rounded-full transition-all duration-200 hover:bg-white/10 active:scale-95;
@@ -33,7 +31,6 @@
            active:scale-95 border-none cursor-pointer backdrop-blur-sm;
   }
 
-  
   .card-glass {
     @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl 
            transition-all duration-300 hover:bg-white/10 hover:border-white/20
@@ -48,7 +45,6 @@
     @apply -translate-y-1 shadow-2xl shadow-purple-500/20;
   }
 
-  
   .input-modern {
     @apply bg-white/5 border border-white/10 rounded-xl px-4 py-3 
            text-white placeholder-gray-400 transition-all duration-300
@@ -56,13 +52,11 @@
            focus:shadow-lg focus:shadow-purple-500/20;
   }
 
-  
   .text-gradient {
     @apply bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 
            bg-clip-text text-transparent;
   }
 
- 
   .bg-animated-gradient {
     @apply bg-gradient-to-br from-purple-600/20 via-pink-600/20 to-blue-600/20;
     animation: gradientShift 8s ease infinite;
@@ -70,9 +64,7 @@
   }
 }
 
-
 @layer utilities {
-  
   .glow-purple {
     @apply shadow-lg shadow-purple-500/50;
   }
@@ -81,13 +73,11 @@
     @apply shadow-lg shadow-pink-500/50;
   }
 
-  
   .backdrop-blur-glass {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
 }
-
 
 .scrollbar-modern::-webkit-scrollbar {
   width: 10px;
@@ -107,7 +97,6 @@
 .scrollbar-modern::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
-
 
 .scrollbar-thin::-webkit-scrollbar {
   width: 6px;
@@ -135,7 +124,6 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 
 @keyframes gradientShift {
   0%,
@@ -190,4 +178,27 @@
 
 .animate-pulse-slow {
   animation: pulse 3s ease-in-out infinite;
+}
+/* Add this to the VERY BOTTOM of your App.css */
+
+/* --- CRITICAL LAYOUT FIXES --- */
+/* This organizes the App.jsx into a Grid: Sidebar (260px) | Content (Rest) */
+.app-container {
+  display: grid;
+  grid-template-columns: 260px 1fr; /* Fixed Sidebar | Flexible Main Area */
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; /* Prevents the whole page from scrolling */
+  position: relative;
+  background-color: #050509; /* Fallback deep black */
+}
+
+/* Ensures the Player stays fixed at the bottom */
+.player-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  z-index: 500; /* Always on top */
 }

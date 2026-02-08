@@ -1,7 +1,7 @@
 import React from "react";
 import "../../css/mainArea/Playlist.css";
 
-const Playlist = () => {
+const Playlist = ({ onSelectCategory }) => {
   const items = [
     {
       id: 1,
@@ -32,14 +32,17 @@ const Playlist = () => {
 
   return (
     <div className="playlist-root">
-      <h1 className="playlist-title">Playlists</h1>
-
+      <h2 className="playlist-title">Moods</h2>
       <div className="playlist-wrapper">
         <div className="playlist-grid">
           {items.map((item) => (
-            <div className="playlist-card" key={item.id}>
+            <div
+              key={item.id}
+              className="playlist-card"
+              onClick={() => onSelectCategory(item.label)}
+            >
               <img src={item.img} alt={item.label} className="playlist-image" />
-              <h4 className="playlist-label">{item.label}</h4>
+              <span className="playlist-label">{item.label}</span>
             </div>
           ))}
         </div>

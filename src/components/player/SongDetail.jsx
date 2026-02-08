@@ -1,12 +1,15 @@
-import React from "react";
-import { FaHeart } from "react-icons/fa";
+import React, { useContext } from "react";
+import { PlayerContext } from "../../context/PlayerProvider";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const SongDetail = ({ currentSong }) => {
+  const { toggleFavourite, isFavourite } = useContext(PlayerContext);
+
   if (!currentSong) return null;
+  const liked = isFavourite(currentSong._id);
 
   return (
     <div className="flex items-center gap-4 animate-fade-in">
-      {/* Song Image */}
       <div className="relative group">
         <img
           src={currentSong.imgUrl || "https://via.placeholder.com/50"}
@@ -15,19 +18,19 @@ const SongDetail = ({ currentSong }) => {
         />
       </div>
 
-      {/* Info */}
-      <div className="flex flex-col justify-center overflow-hidden">
-        <h3 className="text-white font-semibold text-sm truncate hover:underline cursor-pointer">
+      <div className="flex flex-col justify-center overflow-hidden w-40">
+        <h3 className="text-white font-semibold text-sm truncate">
           {currentSong.name}
         </h3>
-        <p className="text-gray-400 text-xs hover:text-white cursor-pointer transition">
-          {currentSong.artist}
-        </p>
+        <p className="text-gray-400 text-xs">{currentSong.artist}</p>
       </div>
 
-      {/* Like Icon */}
-      <button className="ml-2 text-gray-400 hover:text-purple-500 transition">
-        <FaHeart />
+      {/* Functional Heart Button */}
+      <button
+        onClick={() => toggleFavourite(currentSong)}
+        className={`ml-2 text-lg transition-transform active:scale-90 ${liked ? "text-purple-500" : "text-gray-400 hover:text-white"}`}
+      >
+        {liked ? <FaHeart /> : <FaRegHeart />}
       </button>
     </div>
   );
