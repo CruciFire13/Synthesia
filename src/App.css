@@ -202,3 +202,37 @@
   height: 90px;
   z-index: 500; /* Always on top */
 }
+/* --- Modern Dark Scrollbar --- */
+
+/* 1. Target the class 'custom-scrollbar' */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+  height: 8px; /* Height for horizontal scrollbars */
+}
+
+/* 2. The Track (Background) */
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Keep it invisible so it blends in */
+}
+
+/* 3. The Thumb (The moving part) */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle dark grey/white tint */
+  border-radius: 10px; /* Perfectly round edges */
+
+  /* This creates a 'padding' effect so the scrollbar looks floating */
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.2s ease;
+}
+
+/* 4. Hover State */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3); /* Brighter when you grab it */
+}
+
+/* 5. Firefox Support (Fallback) */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}

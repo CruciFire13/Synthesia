@@ -1,7 +1,7 @@
 import React from "react";
 import "../../css/mainArea/Playlist.css";
 
-const Playlist = ({ onSelectCategory }) => {
+const Playlist = ({ onSelectMood, selectedMood }) => {
   const items = [
     {
       id: 1,
@@ -32,14 +32,44 @@ const Playlist = ({ onSelectCategory }) => {
 
   return (
     <div className="playlist-root">
-      <h2 className="playlist-title">Moods</h2>
+      <h2 className="playlist-title">Playlists</h2>
       <div className="playlist-wrapper">
         <div className="playlist-grid">
+          {/* "All" Card to reset filter */}
+          <div
+            className={`playlist-card ${selectedMood === "All" ? "active-card" : ""}`}
+            onClick={() => onSelectMood("All")}
+            style={{
+              minWidth: "100px",
+              background:
+                selectedMood === "All" ? "rgba(168, 85, 247, 0.3)" : "",
+            }}
+          >
+            <div
+              className="playlist-image"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "#222",
+              }}
+            >
+              <span>All</span>
+            </div>
+            <span className="playlist-label">All Songs</span>
+          </div>
+
           {items.map((item) => (
             <div
               key={item.id}
-              className="playlist-card"
-              onClick={() => onSelectCategory(item.label)}
+              className={`playlist-card ${selectedMood === item.label ? "active-card" : ""}`}
+              onClick={() => onSelectMood(item.label)}
+              style={{
+                // Highlight the active card
+                border: selectedMood === item.label ? "1px solid #a855f7" : "",
+                background:
+                  selectedMood === item.label ? "rgba(168, 85, 247, 0.15)" : "",
+              }}
             >
               <img src={item.img} alt={item.label} className="playlist-image" />
               <span className="playlist-label">{item.label}</span>

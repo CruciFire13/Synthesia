@@ -1,95 +1,122 @@
 import React, { useContext } from "react";
+import { FaPlay, FaPause, FaHeart, FaRegHeart } from "react-icons/fa";
 import { PlayerContext } from "../../context/PlayerProvider";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+
+// Ensure this path matches your file structure exactly
+import "../../css/mainArea/SongList.css";
 
 const SongList = ({ songs, onSongClick }) => {
-  const { currentSong, toggleFavourite, isFavourite } =
-    useContext(PlayerContext);
+  const context = useContext(PlayerContext);
 
-  if (!songs || songs.length === 0) return null;
+  // Safety check to prevent crashing if context is still loading
+  if (!context) return null;
 
-  const formatDuration = (duration) => {
-    if (!duration) return "0:00";
-    if (typeof duration === "string" && duration.includes(":")) return duration;
-    let sec = parseInt(duration);
-    if (sec > 10000) sec = sec / 1000;
-    const min = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60);
-    return `${min}:${s < 10 ? "0" : ""}${s}`;
-  };
+  const { currentSong, isPlaying, isFavourite, toggleFavourite } = context;
 
   return (
-    <div className="w-full">
-      <table className="w-full text-left border-collapse">
-        <thead>
-          <tr className="text-[#a7a7a7] text-xs uppercase border-b border-white/10">
-            <th className="py-3 w-12 text-center">#</th>
-            <th className="py-3 w-12"></th> {/* Heart Column */}
-            <th className="py-3">Name</th>
-            <th className="py-3">Artist</th>
-            <th className="py-3">Year</th>
-            <th className="py-3 text-right pr-6">Duration</th>
-          </tr>
-        </thead>
-        <tbody>
-          {songs.map((song, index) => {
-            const isActive = currentSong && currentSong._id === song._id;
-            const liked = isFavourite(song._id);
+    <div className="w-full text-gray-300">
+      {/* Table Header */}
+      <div className="grid grid-cols-[50px_1fr_1fr_1fr_50px] gap-4 p-4 text-xs font-semibold text-gray-400 border-b border-white/10 uppercase">
+        <div className="text-center">#</div>
+        <div>Title</div>
+        <div className="hidden md:block">Artist</div>
+        <div className="hidden sm:block text-right pr-8">Duration</div>
+        <div className="text-center">
+          <FaHeart />
+        </div>
+      </div>
 
-            return (
-              <tr
-                key={song._id}
-                className={`group cursor-pointer transition-colors border-b border-white/5 h-12 text-sm
-                  ${isActive ? "bg-purple-900/40 border-l-4 border-l-purple-500" : "hover:bg-white/5"}
-                `}
-              >
-                {/* Number */}
-                <td
-                  className={`text-center w-12 ${isActive ? "text-purple-400" : "text-gray-400"}`}
-                  onClick={() => onSongClick(song)}
+      {/* Song Rows */}
+      <div className="flex flex-col">
+        {songs.map((song, index) => {
+          const isActive = currentSong && currentSong._id === song._id;
+
+          // Determine the correct image URL (iTunes uses imgUrl, manual lists often use img)
+          const albumArt =
+            song.imgUrl ||
+            song.img ||
+            "https://placehold.co/40x40/222/fff?text=Music";
+
+          return (
+            <div
+              key={song._id}
+              className={`group grid grid-cols-[50px_1fr_1fr_1fr_50px] gap-4 p-3 items-center hover:bg-white/10 rounded-lg cursor-pointer transition-colors ${isActive ? "bg-white/10" : ""}`}
+              onClick={() => onSongClick(song)}
+            >
+              {/* 1. Index / Play Button */}
+              <div className="text-center text-sm relative flex justify-center items-center">
+                <span
+                  className={`group-hover:hidden ${isActive ? "text-purple-500" : ""}`}
                 >
-                  {isActive ? "▶" : index + 1}
-                </td>
+                  {isActive && isPlaying ? (
+                    <img
+                      src="https://i.gifer.com/YdBO.gif"
+                      width="15"
+                      alt="playing"
+                    />
+                  ) : (
+                    index + 1
+                  )}
+                </span>
+                <span className="hidden group-hover:block text-white">
+                  {isActive && isPlaying ? (
+                    <FaPause size={12} />
+                  ) : (
+                    <FaPlay size={12} />
+                  )}
+                </span>
+              </div>
 
-                {/* Heart Button */}
-                <td className="w-12 text-center">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent playing song when clicking heart
-                      toggleFavourite(song);
-                    }}
-                    className={`transition-transform hover:scale-110 ${liked ? "text-purple-500" : "text-gray-500 hover:text-white"}`}
+              {/* 2. Thumbnail & Title (Updated) */}
+              <div className="flex items-center gap-4">
+                <img
+                  src={albumArt}
+                  alt={song.name}
+                  className="w-10 h-10 rounded object-cover shadow-lg border border-white/10"
+                />
+                <div className="flex flex-col">
+                  <span
+                    className={`text-sm font-medium truncate ${isActive ? "text-purple-500" : "text-white"}`}
                   >
-                    {liked ? <FaHeart /> : <FaRegHeart />}
-                  </button>
-                </td>
-
-                {/* Info */}
-                <td
-                  className="font-medium text-white"
-                  onClick={() => onSongClick(song)}
-                >
-                  <span className={isActive ? "text-purple-300" : "text-white"}>
                     {song.name}
                   </span>
-                </td>
-                <td className="text-gray-400" onClick={() => onSongClick(song)}>
-                  {song.artist}
-                </td>
-                <td className="text-gray-400" onClick={() => onSongClick(song)}>
-                  {song.year}
-                </td>
-                <td
-                  className="text-gray-400 text-right pr-6"
-                  onClick={() => onSongClick(song)}
-                >
-                  {formatDuration(song.duration)}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  <span className="text-xs text-gray-400 md:hidden">
+                    {song.artist}
+                  </span>
+                </div>
+              </div>
+
+              {/* 3. Artist */}
+              <div className="hidden md:block text-sm truncate hover:text-white">
+                {song.artist}
+              </div>
+
+              {/* 4. Duration (Formatted) */}
+              <div className="hidden sm:block text-sm text-right pr-8">
+                {/* Convert seconds to mm:ss if it's a raw number */}
+                {song.duration.includes(":")
+                  ? song.duration
+                  : `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, "0")}`}
+              </div>
+
+              {/* 5. Like Button */}
+              <div
+                className="text-center"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavourite(song);
+                }}
+              >
+                {isFavourite(song._id) ? (
+                  <FaHeart className="text-purple-500 hover:scale-110 transition-transform mx-auto" />
+                ) : (
+                  <FaRegHeart className="hover:text-white hover:scale-110 transition-transform mx-auto" />
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

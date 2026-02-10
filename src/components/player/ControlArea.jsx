@@ -1,64 +1,97 @@
 import React from "react";
 import {
-  FaPlay,
-  FaPause,
   FaStepBackward,
   FaStepForward,
-  FaRandom,
-  FaRedo,
+  FaPlay,
+  FaPause,
+  FaHeart,
+  FaRegHeart,
 } from "react-icons/fa";
 
 const ControlArea = ({
+  currentSong,
   isPlaying,
   onTogglePlay,
+  onNext,
+  onPrev,
   currentTime,
   duration,
-  onSeek,
+  onSeekStart,
+  onSeekChange,
+  onSeekEnd,
+  isFavourite,
+  toggleFavourite,
 }) => {
   const formatTime = (time) => {
-    if (!time) return "0:00";
+    if (!time || isNaN(time)) return "0:00";
     const min = Math.floor(time / 60);
     const sec = Math.floor(time % 60);
-    return `${min}:${sec < 10 ? "0" : ""}${sec}`;
+    return `${min}:${sec < 10 ? "0" + sec : sec}`;
   };
 
   return (
-    <div className="flex flex-col items-center w-full max-w-xl gap-2">
-      {/* Buttons */}
-      <div className="flex items-center gap-6 text-gray-400">
-        <FaRandom className="hover:text-white cursor-pointer transition text-sm" />
-        <FaStepBackward className="hover:text-white cursor-pointer transition text-lg" />
+    <div className="flex flex-col items-center w-full max-w-lg gap-2">
+      {/* Controls */}
+      <div className="flex items-center gap-6">
+        <button
+          onClick={onPrev}
+          className="text-gray-400 hover:text-white transition-colors"
+        >
+          <FaStepBackward size={20} />
+        </button>
 
-        {/* Play/Pause Circle */}
         <button
           onClick={onTogglePlay}
-          className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black hover:scale-105 transition shadow-lg shadow-purple-500/20"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-black hover:scale-105 transition-transform"
         >
           {isPlaying ? (
-            <FaPause size={14} />
+            <FaPause size={16} />
           ) : (
-            <FaPlay size={14} className="ml-1" />
+            <FaPlay size={16} className="ml-1" />
           )}
         </button>
 
-        <FaStepForward className="hover:text-white cursor-pointer transition text-lg" />
-        <FaRedo className="hover:text-white cursor-pointer transition text-sm" />
+        <button
+          onClick={onNext}
+          className="text-gray-400 hover:text-white transition-colors"
+        >
+          <FaStepForward size={20} />
+        </button>
+
+        <button
+          onClick={() => currentSong && toggleFavourite(currentSong)}
+          className={`transition-colors ${currentSong && isFavourite(currentSong._id) ? "text-purple-500" : "text-gray-400 hover:text-white"}`}
+        >
+          {currentSong && isFavourite(currentSong._id) ? (
+            <FaHeart size={18} />
+          ) : (
+            <FaRegHeart size={18} />
+          )}
+        </button>
       </div>
 
-      {/* Progress Bar Row */}
-      <div className="flex items-center gap-3 w-full text-xs font-medium text-gray-400">
-        <span className="w-10 text-right">{formatTime(currentTime)}</span>
+      {/* Progress Bar (FIXED) */}
+      <div className="w-full flex items-center gap-3 text-xs text-gray-400 font-medium">
+        <span>{formatTime(currentTime)}</span>
 
         <input
           type="range"
           min="0"
-          max={duration || 0}
+          max={duration || 100}
           value={currentTime}
-          onChange={(e) => onSeek(e.target.value)}
-          className="flex-1 h-1 rounded-lg appearance-none bg-gray-600 accent-purple-500 cursor-pointer hover:accent-purple-400"
+          // 1. Mouse Down: Stop UI updates from audio
+          onMouseDown={onSeekStart}
+          onTouchStart={onSeekStart}
+          // 2. Change (Drag): Update visual slider only
+          onChange={(e) => onSeekChange(Number(e.target.value))}
+          // 3. Mouse Up: Commit value to Audio Player
+          onMouseUp={(e) => onSeekEnd(Number(e.target.value))}
+          onTouchEnd={(e) => onSeekEnd(Number(e.target.value))}
+          className="flex-1 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-purple-500 hover:accent-purple-400"
+          style={{ height: "4px" }}
         />
 
-        <span className="w-10">{formatTime(duration)}</span>
+        <span>{formatTime(duration)}</span>
       </div>
     </div>
   );

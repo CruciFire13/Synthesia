@@ -179,3 +179,168 @@
   background: rgba(255, 255, 255, 0.1);
   transform: rotate(45deg);
 }
+/* --- Modal Styles --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #181818;
+  width: 400px;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  color: white;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.modal-header h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #ef4444; /* Red color for close */
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.close-btn:hover {
+  transform: scale(1.1);
+  color: #dc2626;
+}
+
+.modal-subtitle {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  color: #ccc;
+  margin-bottom: 8px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #2a2a2a;
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+}
+
+.input-wrapper button {
+  background: none;
+  border: none;
+  color: #888;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.input-wrapper:focus-within {
+  border-color: #8b5cf6; /* Purple highlight */
+}
+
+.modal-link {
+  margin-bottom: 25px;
+}
+
+.modal-link a {
+  color: #a78bfa;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.modal-link a:hover {
+  text-decoration: underline;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-cancel {
+  background: transparent;
+  border: 1px solid #444;
+  color: #ccc;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #333;
+  color: white;
+}
+
+.btn-save {
+  background: linear-gradient(90deg, #d946ef 0%, #8b5cf6 100%);
+  border: none;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+.btn-save:hover {
+  opacity: 0.9;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}

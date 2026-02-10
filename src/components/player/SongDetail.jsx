@@ -1,37 +1,47 @@
-import React, { useContext } from "react";
-import { PlayerContext } from "../../context/PlayerProvider";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import React from "react";
 
 const SongDetail = ({ currentSong }) => {
-  const { toggleFavourite, isFavourite } = useContext(PlayerContext);
+  if (!currentSong)
+    return (
+      <div className="flex items-center gap-4 opacity-50">
+        <div className="w-14 h-14 bg-white/10 rounded-md animate-pulse"></div>
+        <div className="flex flex-col gap-2 w-24">
+          <div className="h-3 bg-white/10 rounded animate-pulse"></div>
+          <div className="h-3 w-2/3 bg-white/10 rounded animate-pulse"></div>
+        </div>
+      </div>
+    );
 
-  if (!currentSong) return null;
-  const liked = isFavourite(currentSong._id);
+  // FIX: Check for 'imgUrl' (iTunes API) OR 'img' (Manual List)
+  const albumArt =
+    currentSong.imgUrl ||
+    currentSong.img ||
+    "https://placehold.co/60x60/222/fff?text=Music";
 
   return (
-    <div className="flex items-center gap-4 animate-fade-in">
-      <div className="relative group">
+    <div className="flex items-center gap-4">
+      {/* Album Art Container */}
+      <div className="relative w-14 h-14 group flex-shrink-0">
         <img
-          src={currentSong.imgUrl || "https://via.placeholder.com/50"}
-          alt="Album Art"
-          className="w-14 h-14 rounded-md object-cover shadow-lg"
+          src={albumArt}
+          alt={currentSong.name}
+          className="w-full h-full object-cover rounded-md shadow-lg group-hover:opacity-80 transition-opacity border border-white/5"
+          // Fallback if image fails to load
+          onError={(e) => {
+            e.target.src = "https://placehold.co/60x60/222/fff?text=Error";
+          }}
         />
       </div>
 
-      <div className="flex flex-col justify-center overflow-hidden w-40">
-        <h3 className="text-white font-semibold text-sm truncate">
+      {/* Text Info */}
+      <div className="flex flex-col justify-center overflow-hidden">
+        <h4 className="text-white font-semibold text-sm truncate max-w-[150px]">
           {currentSong.name}
-        </h3>
-        <p className="text-gray-400 text-xs">{currentSong.artist}</p>
+        </h4>
+        <p className="text-gray-400 text-xs truncate max-w-[150px]">
+          {currentSong.artist}
+        </p>
       </div>
-
-      {/* Functional Heart Button */}
-      <button
-        onClick={() => toggleFavourite(currentSong)}
-        className={`ml-2 text-lg transition-transform active:scale-90 ${liked ? "text-purple-500" : "text-gray-400 hover:text-white"}`}
-      >
-        {liked ? <FaHeart /> : <FaRegHeart />}
-      </button>
     </div>
   );
 };
